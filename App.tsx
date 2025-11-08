@@ -1,3 +1,8 @@
+import "./global.css"
+ 
+export default App() {
+  /* Your App */
+}
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 
