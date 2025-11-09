@@ -12,6 +12,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import os
 import requests
+from langgraph_agent import run_agent
+from pydantic import BaseModel
 
 # Create FastAPI app
 app = FastAPI()
@@ -46,7 +48,7 @@ async def health():
 # NVIDIA Nemotron Chat Endpoint
 # -------------------------------
 
-API_URL = "https://integrate.api.nvidia.com/v1/chat/completions"
+API_URL = os.getenv("API_URL")  # set via environment variable
 API_KEY = os.getenv("NVIDIA_API_KEY")  # set via environment variable
 
 class Prompt(BaseModel):
@@ -73,3 +75,13 @@ async def chat(data: Prompt):
         return {"response": result["choices"][0]["message"]["content"]}
     else:
         raise HTTPException(status_code=response.status_code, detail=response.text)
+
+
+@app.post("/api/langgraph-chat")
+async def langgraph_chat(data: Prompt):
+    result = run_agent.run(data.prompt)
+    return {"response": result}
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port="8000")
