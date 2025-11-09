@@ -20,7 +20,7 @@ export default function App() {
           const response = await fetch(url, {
             method: 'GET',
             headers: {
-              'Accept': 'text/plain',
+              'Accept': 'application/json',
               'ngrok-skip-browser-warning': 'true',
             },
           });
@@ -34,17 +34,17 @@ export default function App() {
             return;
           }
           
-          const data = await response.text();
+          const data = await response.json();
           console.log('Ping response:', data);
           
-          if (data.trim() === 'pong') {
+          if (data.message === 'pong') {
             console.log('✅ Successfully received pong from backend!');
             setConnectionStatus('connected');
             setErrorMessage('');
           } else {
             console.warn('Unexpected response:', data);
             setConnectionStatus('disconnected');
-            setErrorMessage(`Unexpected response: ${data}`);
+            setErrorMessage(`Unexpected response: ${JSON.stringify(data)}`);
           }
         } catch (error) {
           console.error('Error fetching ping:', error);

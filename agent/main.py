@@ -19,6 +19,7 @@ app = FastAPI()
 origins = [
     "http://localhost",  # For web-based testing if applicable
     "http://localhost:8081",  # Example for React Native development server
+    "*",  # Allow all origins for development (including ngrok and mobile devices)
     # Add other origins if your React Native app might run on different IPs/ports
     # e.g., "http://192.168.1.100:8081" for a device on your local network
 ]
@@ -26,10 +27,10 @@ origins = [
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,  # Allow all origins for development
-    allow_credentials=True,
+    allow_origins=["*"],  # Allow all origins for development (including ngrok)
+    allow_credentials=False,  # Must be False when using allow_origins=["*"]
     allow_methods=["*"],  # Allow all methods (GET, POST, etc.)
-    allow_headers=["*"],  # Allow all headers
+    allow_headers=["*"],  # Allow all headers (including ngrok-skip-browser-warning)
 )
 
 # Test endpoint
